@@ -87,7 +87,7 @@ The user needs four things you cannot ship. Locate each before promising anythin
 2. **`renodx-dlss5.addon64`** — NOT on RenoDX's GitHub releases (the `snapshot` tag has
    no such asset). It circulates via the **RenoDX Discord** and **Nexus Mods**
    (https://www.nexusmods.com/site/mods/2224). If the user runs **RHI**, its DLSS 5
-   button deploys it and caches a copy under `%LOCALAPPDATA%\RHIdx5\`. On a machine
+   button deploys it and caches a copy under `%LOCALAPPDATA%\RHI\rdx5\`. On a machine
    with nothing yet, installing RHI (github.com/RankFTW/RHI/releases) is the fastest
    bootstrap — it also provides ReShade and a verified neural runtime in one step.
 3. **`nvngx_dlssnr.dll` v310.8.0** — the neural runtime. **Never download it from a
