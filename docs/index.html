@@ -76,8 +76,8 @@
     <p style="color:var(--dim)">Claude Code or Claude Desktop with file access works best — the assistant needs to read and write files on your PC. Swap in your game's name at the end.</p>
     <pre class="prompt" id="prompt">Fetch https://raw.githubusercontent.com/ThunderRuler/dlss5-installer/main/SKILL.md and follow it exactly. This whole session is for installing DLSS 5 into my games. First game: [GAME NAME]</pre>
     <button class="copybtn" onclick="copyPrompt()" id="cbtn">Copy prompt</button>
-    <p class="hint">Claude Code users can instead install it as a skill:
-    <code>git clone https://github.com/ThunderRuler/dlss5-installer %USERPROFILE%\.claude\skills\dlss5-installer</code></p>
+    <p class="hint">Or install it as a real skill in Claude Code (and ~20 other agents):
+    <code>npx skills add ThunderRuler/dlss5-installer</code></p>
   </div>
 </section>
 

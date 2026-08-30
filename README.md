@@ -23,14 +23,19 @@ breaks, it debugs one variable at a time — and it can cleanly remove everythin
 Works in Claude Code, Claude Desktop (with file access), or any assistant that can fetch
 a URL and run commands on your PC.
 
-### Option 2 — install as a Claude Code skill
+### Option 2 — install it properly (one command)
 
 ```bash
-git clone https://github.com/ThunderRuler/dlss5-installer %USERPROFILE%\.claude\skills\dlss5-installer
+npx skills add ThunderRuler/dlss5-installer
 ```
 
-Then in any session: `/dlss5-installer` — or just ask to "get DLSS 5 working on <game>"
-and it triggers on its own.
+Installs into Claude Code and ~20 other agents (Cursor, Codex, Copilot, Gemini CLI,
+Cline, Windsurf, Zed…) via the [Agent Skills](https://skills.sh) standard. Then just ask
+to "get DLSS 5 working on <game>" and it triggers on its own — or invoke
+`/dlss5-installer` directly in Claude Code.
+
+Prefer git? `git clone` this repo into `%USERPROFILE%\.claude\skills\dlss5-installer`
+works too.
 
 ## What you need
 
