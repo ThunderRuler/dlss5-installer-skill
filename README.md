@@ -37,6 +37,10 @@ to "get DLSS 5 working on <game>" and it triggers on its own — or invoke
 Prefer git? `git clone` this repo into `%USERPROFILE%\.claude\skills\dlss5-installer`
 works too.
 
+**Staying up to date:** an installed skill is a snapshot, so run `npx skills update` to
+pull the latest version. The copy-paste prompt above always fetches the current `SKILL.md`
+straight from this repo, so it never goes stale.
+
 ## What you need
 
 | Requirement | Why |
