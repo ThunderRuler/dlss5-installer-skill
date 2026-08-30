@@ -1,9 +1,27 @@
 # Game log
 
-> Community results log, seeded from the author's test machine (RTX 5070 Ti, driver 616.56).
-> PRs with your own results are welcome: game, engine, API, scenario, and the proof log line.
+Seeded from the author's test machine (RTX 5070 Ti, driver 616.56). The detailed
+write-ups below are deep-dive cases; the table is where community results go.
 
-## Done
+## Add your result
+
+**Easiest:** [open a game result issue](https://github.com/ThunderRuler/dlss5-installer/issues/new/choose)
+and it gets added for you — no git needed.
+
+**Or edit directly:** click the pencil icon on this file and add a row to the table below.
+GitHub turns your edit into a pull request automatically. See
+[CONTRIBUTING.md](../CONTRIBUTING.md).
+
+Include the **proof line from your log**, not just "it worked" — that line is what makes
+this table trustworthy. Failures are equally welcome and equally useful.
+
+## Community results
+
+| Game | Engine / API | Scenario | Result | Proof line / reason | Reporter |
+|---|---|---|---|---|---|
+| _(example — replace or add below)_ | Unity, D3D11 64-bit | C (Feeder) | ✅ working | `[feed] frame 21600 delivered (2560x1440, reset=0)` | @you |
+
+## Detailed cases
 
 ### Death Stranding Director's Cut — ✅ working
 `C:\Program Files (x86)\Steam\steamapps\common\DEATH STRANDING DIRECTORS CUT` · `ds.exe` · Steam 1850570

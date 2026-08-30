@@ -64,10 +64,19 @@ references/
 
 ## Contributing game results
 
-Got it working (or definitively not working) in a game we haven't logged? PR a short
-entry to `references/game-results.md`: game, engine, API, scenario used, backbuffer
-format if it failed, and the proof line from the log. That table is the most useful thing
-this repo can grow.
+Got it working — or definitively *not* working — in a game that isn't logged yet?
+
+**[Open a game result issue](https://github.com/ThunderRuler/dlss5-installer/issues/new/choose)**
+and fill in the form. No git required, and it gets added to
+[`references/game-results.md`](references/game-results.md) for you. Prefer to edit the file
+yourself? That works too — see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+Failure reports are just as valuable as successes: knowing a game *can't* work saves the
+next person an evening. Please include the proof line from your log rather than just
+"it worked" — that's what makes the table trustworthy.
+
+Two things that get declined, and they're why this project can exist publicly: **no
+binaries** (above all `nvngx_dlssnr.dll`) and **no links to runtime downloads**.
 
 ## Credits & provenance
 

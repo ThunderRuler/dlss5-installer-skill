@@ -1,0 +1,91 @@
+name: Report a game result
+description: Tell us whether DLSS 5 worked (or didn't) in a game, so it can be added to the results log.
+title: "[Game] "
+labels: ["game result"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! **You don't need to know git** — just fill this in and it gets
+        added to `references/game-results.md` for you.
+
+        A failure report is just as valuable as a success. Knowing a game *can't* work saves
+        the next person an evening.
+
+  - type: input
+    id: game
+    attributes:
+      label: Game
+      placeholder: "Stray (Steam)"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: outcome
+    attributes:
+      label: Outcome
+      options:
+        - Working
+        - Partly working (visible artefacts or instability)
+        - Failed
+    validations:
+      required: true
+
+  - type: dropdown
+    id: scenario
+    attributes:
+      label: Which stack did you use?
+      description: The skill tells you this during triage. Pick "Not sure" if you don't know.
+      options:
+        - "A — D3D12 + native DLSS (renodx-dlss5 alone)"
+        - "B — D3D11 + DLSS (+ dlss5-dx11-bridge)"
+        - "C — no DLSS (+ DLSS5-Feeder)"
+        - "D — 32-bit D3D11 (Feeder + host64)"
+        - "Not sure"
+    validations:
+      required: true
+
+  - type: input
+    id: engine
+    attributes:
+      label: Engine and API
+      description: From `ReShade.log` — e.g. the `Redirecting D3D12CreateDevice` line.
+      placeholder: "Unreal Engine 4, D3D11 64-bit"
+
+  - type: textarea
+    id: proof
+    attributes:
+      label: The proof line from the log
+      description: >
+        This is the important bit. For a success, the line showing frames delivered
+        (`inline feature 18 evaluation succeeded` or `[feed] frame N delivered`). For a
+        failure, the error line. Paste a few surrounding lines if unsure.
+      render: text
+      placeholder: |
+        [feed] frame 21600 delivered (2560x1440, reset=0)
+    validations:
+      required: true
+
+  - type: input
+    id: gpu
+    attributes:
+      label: GPU and driver
+      placeholder: "RTX 5070 Ti, driver 616.56"
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: Anything else worth knowing
+      description: >
+        Settings you had to change, launch options (`-dx12`?), things that went wrong first,
+        or the backbuffer format if the addon crashed.
+
+  - type: checkboxes
+    id: rules
+    attributes:
+      label: Please confirm
+      options:
+        - label: This is a single-player game with no anti-cheat.
+          required: true
+        - label: I have not attached or linked any NVIDIA DLL — this project never distributes those.
+          required: true
