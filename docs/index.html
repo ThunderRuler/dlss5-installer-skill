@@ -60,7 +60,7 @@
 
 <header>
   <div class="wrap">
-    <div class="badge">AI skill &middot; RTX 50-series &middot; Windows</div>
+    <div class="badge">AI skill &middot; NVIDIA RTX &middot; Windows</div>
     <h1>Get <span class="g">DLSS&nbsp;5</span> into your games.<br>Let your AI do the modding.</h1>
     <p class="sub">One prompt turns Claude into a careful, log-reading DLSS 5 Neural Rendering
     installer — it picks the right mod stack for each game, verifies it actually works, and can
@@ -84,10 +84,10 @@
 <section>
   <h2>What happens next</h2>
   <ol class="steps">
-    <li><b>Safety checks first</b><p>It verifies you have an RTX 50-series GPU and the right driver, warns you that DLSS 5 costs FPS rather than adding it, and flat-out refuses games with anti-cheat — that's a ban risk no mod is worth.</p></li>
+    <li><b>Safety checks first</b><p>It checks your GPU and driver, and flat-out refuses games with anti-cheat — that's a ban risk no mod is worth. Then it checks the community log: if someone already solved your game, you start from their answer.</p></li>
     <li><b>It figures out your game</b><p>Which graphics API the game really runs (not what it claims), where the actual exe lives, and whether it already has DLSS. This decides which of four install recipes applies.</p></li>
     <li><b>Install, then prove it</b><p>Files go in, the game launches, and the assistant reads the mod's own log files for the line that proves frames are being delivered. No "should work now" — evidence or it keeps debugging.</p></li>
-    <li><b>Undo, any time</b><p>It tracks what it added and can remove it all. Worst case, Steam's <i>Verify integrity of game files</i> restores the game itself.</p></li>
+    <li><b>Share the result</b><p>Working or definitively not, the assistant offers to report the outcome back to the community log — so every install makes the next person's easier. (And undo is one ask away: it tracks what it added; worst case, Steam's <i>Verify integrity</i> restores the game.)</p></li>
   </ol>
 </section>
 
@@ -95,8 +95,8 @@
   <h2>Know before you start</h2>
   <div class="dangerbox"><b>Never on multiplayer / anti-cheat games.</b>
     This works by injecting DLLs into the game — exactly what anti-cheat looks for. The skill refuses these games even if you ask. Bans are often permanent and hardware-level.</div>
-  <div class="warnbox"><b>DLSS 5 Neural Rendering is not an upscaler.</b>
-    It's a neural detail pass that costs roughly <i>half</i> your framerate (measured on an RTX 5070 Ti). People run it because it looks striking, not because it's fast.</div>
+  <div class="warnbox"><b>RTX 50-series is the documented config.</b>
+    40- and 30-series reportedly work too but aren't documented here yet &mdash; if you get one working, report it and yours becomes the reference.</div>
   <div class="warnbox"><b>This uses a leaked, unreleased NVIDIA runtime.</b>
     The community tools around it are legitimate open source, but <code>nvngx_dlssnr.dll</code> leaked from a game build. This repo never distributes it — the skill only finds and hash-verifies copies already on your machine, and rejects the corrupt copy that's floating around.</div>
 </section>

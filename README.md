@@ -45,16 +45,17 @@ straight from this repo, so it never goes stale.
 
 | Requirement | Why |
 |---|---|
-| **NVIDIA RTX 50-series** + driver 616.56+ | No confirmed report of DLSS 5 NR working on anything older |
+| **NVIDIA RTX GPU** — 50-series + driver 616.56+ is the documented config | 40/30-series reportedly works too, but is undocumented here so far — if you get it working, [tell us](https://github.com/ThunderRuler/dlss5-installer/issues/new/choose)! |
 | Windows + Steam/GOG/Epic games | Game Pass installs are locked and can't be modded this way |
 | A single-player game **without anti-cheat** | The skill hard-refuses anti-cheat titles — injecting DLLs gets you banned |
 
-## What to expect (honestly)
+## How the community loop works
 
-DLSS 5 Neural Rendering is **not an upscaler**. It's a neural detail/beauty pass that
-costs roughly **half your framerate**. Every current path is effectively DLAA. People run
-it because it looks striking, not because it's fast. The skill tells your assistant to
-make sure you know this before installing anything.
+Before installing, your assistant checks
+[`references/game-results.md`](references/game-results.md) for your game — if someone
+already got it working (or proved it can't), you start from their answer. When *your*
+install reaches a definitive result, the assistant offers to report it back with one
+click. Every install makes the next one easier.
 
 ## What's in the repo
 

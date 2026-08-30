@@ -6,7 +6,7 @@ description: >
   wants to install, enable, fix, or remove "DLSS 5", "neural rendering", "NR", "RenoDX
   DLSS5", or the DLSS5-Feeder in any game — including "the ReShade overlay won't open",
   "Home key does nothing", "NR says STANDBY/FAILED", or "get DLSS 5 working on <game>".
-  Requires an NVIDIA RTX 50-series GPU. Windows only.
+  NVIDIA RTX GPU (50-series is the documented config). Windows only.
 ---
 
 # DLSS 5 Installer
@@ -37,18 +37,24 @@ from the same location, e.g.
 Run these checks in your first exchange. Each one exists because skipping it burns the
 user's evening or worse.
 
-### Gate 1: Hardware (hard stop)
+### Gate 1: Hardware (warn, don't block)
 
-DLSS 5 NR needs an **RTX 50-series GPU** and driver **616.56 or newer**. There is no
-confirmed report of it working on RTX 40-series or older — every "the neural pass never
-starts" report traces to pre-50 hardware. Check with:
+The documented-working configuration is an **RTX 50-series GPU** with driver **616.56 or
+newer** — everything in this project's references was validated there. Community reports
+exist of RTX 40- and even 30-series working, but none are documented here yet. Check with:
 
 ```powershell
 (Get-CimInstance Win32_VideoController | Where-Object Name -match 'NVIDIA').Name
 nvidia-smi --query-gpu=driver_version --format=csv,noheader
 ```
 
-If the GPU fails the gate, say so kindly and stop. Do not install "to see what happens."
+- **RTX 50-series**: proceed normally.
+- **RTX 40/30-series**: tell the user honestly — undocumented territory, the neural pass
+  may simply never start, and if it fails that's the first suspect. If they want to try
+  anyway, proceed; the install is fully reversible either way. If it *works*, that result
+  is gold — make sure it gets reported (see "Share the result" below) so the next
+  40/30-series user has documentation.
+- **GTX / non-NVIDIA**: stop — NGX requires an RTX GPU.
 
 ### Gate 2: Anti-cheat (hard stop, non-negotiable)
 
@@ -63,17 +69,14 @@ frequently hardware-level and permanent. Before any install, scan the game folde
 If found: explain the ban risk, refuse, and offer a different game. This is the one rule
 with no override.
 
-### Gate 3: Expectations (say this before the first install)
+### Gate 3: Unmoddable installs
 
-Tell the user, in your own words: **DLSS 5 Neural Rendering is not an upscaler and will
-not raise FPS.** It is a detail/beauty pass that costs roughly **half your framerate**
-(measured on an RTX 5070 Ti). Every current path is effectively DLAA. If they want more
-FPS, this is the wrong mod. Get an explicit "yes, continue" once — it holds for the
-session.
-
-Also refuse cleanly for: **Game Pass / Microsoft Store installs** (ACL-locked
+Refuse cleanly for: **Game Pass / Microsoft Store installs** (ACL-locked
 `WindowsApps`, cannot be modded this way) and games running through **anti-tamper
 launchers** that self-verify files.
+
+(No lecture needed on performance — anyone asking for DLSS 5 knows it's a neural detail
+pass, not an upscaler. Mention the FPS cost only if the user asks or seems surprised.)
 
 ## Step 1 — component check (first game only)
 
@@ -81,8 +84,12 @@ The user needs four things you cannot ship. Locate each before promising anythin
 
 1. **ReShade 6.8+ *Addon build*** — from https://reshade.me (the `_Addon.exe` installer;
    the standard build cannot load addons).
-2. **`renodx-dlss5.addon64`** — from
-   `https://github.com/clshortfuse/renodx/releases/download/snapshot/renodx-dlss5.addon64`
+2. **`renodx-dlss5.addon64`** — NOT on RenoDX's GitHub releases (the `snapshot` tag has
+   no such asset). It circulates via the **RenoDX Discord** and **Nexus Mods**
+   (https://www.nexusmods.com/site/mods/2224). If the user runs **RHI**, its DLSS 5
+   button deploys it and caches a copy under `%LOCALAPPDATA%\RHIdx5\`. On a machine
+   with nothing yet, installing RHI (github.com/RankFTW/RHI/releases) is the fastest
+   bootstrap — it also provides ReShade and a verified neural runtime in one step.
 3. **`nvngx_dlssnr.dll` v310.8.0** — the neural runtime. **Never download it from a
    random archive.** It is unreleased NVIDIA code that leaked; copies in the wild are
    frequently corrupt or tampered. Find a clean copy *already on the user's machine*:
@@ -97,13 +104,20 @@ The user needs four things you cannot ship. Locate each before promising anythin
 4. **`nvngx_dlss.dll`** (standard DLSS) — many games ship it; DLSS Swapper is a clean
    source. Required even for games with no DLSS of their own.
 
-Scenario C additionally needs `dlss5-feed.addon64` + `DLSS5_Feed.fx` (DLSS5-Feeder
-releases) and iMMERSE LaunchPad (`MartysMods_LAUNCHPAD.fx`, the `MartysMods\` folder,
+Scenario C additionally needs `dlss5-feed.addon64` + `DLSS5_Feed.fx` — take the
+**latest** DLSS5-Feeder release (v0.4.0 at time of writing) and always deploy the addon
+and shader from the **same release** as a matched pair — and iMMERSE LaunchPad (`MartysMods_LAUNCHPAD.fx`, the `MartysMods\` folder,
 `iMMERSE_bluenoise_opt.png`) — sources in `references/components.md`.
 
 ## Step 2 — triage the game
 
-Read `references/decision-tree.md`, then establish, with evidence:
+**First, check whether someone already solved this game.** Fetch the current community
+log — not just your local copy, which may be stale:
+`https://raw.githubusercontent.com/ThunderRuler/dlss5-installer/main/references/game-results.md`
+A match on the game (or its engine) can hand you the scenario, the launch options, and
+the known failure modes before you touch anything. Tell the user what you found.
+
+Then read `references/decision-tree.md` and establish, with evidence:
 
 1. **The real exe.** Unreal games run from `<Game>\Binaries\Win64\*-Shipping.exe`, not
    the launcher in the root. Everything installs next to the exe that *runs*.
@@ -171,6 +185,26 @@ If two grounded hypotheses in a row fail, step back and re-triage rather than it
 Some games genuinely cannot work yet (e.g. a 10-bit `R10G10B10A2_UNORM` backbuffer
 crashing the addon's `CreateFeature`) — an honest "this one's blocked upstream, here's
 the exact reason" beats an endless loop. Offer to revert.
+
+## Step 5 — share the result (the whole point of the log)
+
+When a game reaches a definitive state — **working** (proof line seen) or **definitively
+failed** (root cause identified) — offer to report it so the next person with this game
+starts from the answer instead of from scratch. With the user's consent:
+
+- **Preferred:** open a prefilled game-result issue. With the `gh` CLI:
+  ```
+  gh issue create --repo ThunderRuler/dlss5-installer --label "game result"     --title "[Game] <name> — <working|failed>" --body "<details>"
+  ```
+  Otherwise give the user this link to click and paste into:
+  `https://github.com/ThunderRuler/dlss5-installer/issues/new?template=game-result.yml`
+- Include: game + store, engine, runtime API (from `ReShade.log`), scenario, GPU +
+  driver, the **proof line** (or the failing line + backbuffer format), and any launch
+  options or config that mattered.
+- Never include: file paths containing the user's name, and never any DLL or link to one.
+
+A 40/30-series success report is especially valuable — it would be the first documented
+one. Skip the offer if the user already declined once this session.
 
 ## Removal / rollback (offer it, any time)
 
