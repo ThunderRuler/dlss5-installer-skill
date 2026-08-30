@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DLSS 5 Installer — a skill for your AI assistant</title>
+<meta name="description" content="Paste one prompt into Claude and get DLSS 5 Neural Rendering installed into your games — triaged, verified from logs, and reversible.">
+<style>
+  :root{
+    --bg:#0b0e14; --panel:#121826; --panel2:#0e1420; --border:#1f2a3d;
+    --text:#dbe4f0; --dim:#8fa0b8; --accent:#76b900; --accent2:#9ee63e;
+    --warn:#ffb454; --danger:#ff6b6b; --mono:ui-monospace,'Cascadia Code',Consolas,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font:16px/1.65 system-ui,'Segoe UI',sans-serif}
+  .wrap{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:72px 0 40px;text-align:center;
+    background:radial-gradient(ellipse 70% 60% at 50% -10%,#17301a55,transparent)}
+  .badge{display:inline-block;font:600 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;
+    color:var(--accent2);border:1px solid #2c4a12;background:#12200a;border-radius:999px;padding:7px 14px;margin-bottom:22px}
+  h1{font-size:clamp(34px,6vw,54px);line-height:1.1;font-weight:800;letter-spacing:-.02em}
+  h1 .g{color:var(--accent)}
+  .sub{color:var(--dim);font-size:19px;max-width:620px;margin:18px auto 0}
+  h2{font-size:26px;margin:0 0 14px;letter-spacing:-.01em}
+  section{padding:38px 0}
+  .card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:26px 28px}
+  .prompt-card{border-color:#2c4a12;background:linear-gradient(180deg,#111b0d,#0e1420)}
+  pre.prompt{background:var(--panel2);border:1px solid var(--border);border-radius:10px;
+    padding:18px 20px;font:14.5px/1.6 var(--mono);white-space:pre-wrap;word-break:break-word;color:#cfe8a8;margin:16px 0}
+  .copybtn{display:inline-flex;align-items:center;gap:8px;background:var(--accent);color:#0b0e14;
+    border:0;border-radius:8px;font:700 15px/1 system-ui;padding:13px 22px;cursor:pointer}
+  .copybtn:hover{background:var(--accent2)}
+  .hint{color:var(--dim);font-size:14px;margin-top:12px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;margin-top:8px}
+  .tile{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:20px 22px}
+  .tile h3{font-size:16px;margin-bottom:8px}
+  .tile p{color:var(--dim);font-size:14.5px}
+  .tile .n{font:800 13px var(--mono);color:var(--accent);display:block;margin-bottom:10px}
+  table{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:10px}
+  th,td{text-align:left;padding:10px 12px;border-bottom:1px solid var(--border)}
+  th{color:var(--dim);font-weight:600;font-size:13px;text-transform:uppercase;letter-spacing:.06em}
+  .ok{color:var(--accent2)} .no{color:var(--danger)}
+  .warnbox{border-left:3px solid var(--warn);background:#1c150a;border-radius:0 10px 10px 0;padding:16px 20px;margin:14px 0;font-size:15px}
+  .dangerbox{border-left:3px solid var(--danger);background:#1c0d0d;border-radius:0 10px 10px 0;padding:16px 20px;margin:14px 0;font-size:15px}
+  .warnbox b,.dangerbox b{display:block;margin-bottom:4px}
+  code{font:.92em var(--mono);background:var(--panel2);border:1px solid var(--border);border-radius:5px;padding:1px 6px}
+  a{color:var(--accent2);text-decoration:none} a:hover{text-decoration:underline}
+  footer{border-top:1px solid var(--border);margin-top:40px;padding:34px 0 50px;color:var(--dim);font-size:14px}
+  footer p{margin-bottom:8px}
+  .steps{counter-reset:s;list-style:none;margin-top:6px}
+  .steps li{counter-increment:s;position:relative;padding:0 0 18px 52px}
+  .steps li::before{content:counter(s);position:absolute;left:0;top:0;width:34px;height:34px;
+    border-radius:50%;background:var(--panel);border:1px solid #2c4a12;color:var(--accent2);
+    font:700 15px/34px var(--mono);text-align:center}
+  .steps b{display:block;margin-bottom:2px}
+  .steps p{color:var(--dim);font-size:15px}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="badge">AI skill &middot; RTX 50-series &middot; Windows</div>
+    <h1>Get <span class="g">DLSS&nbsp;5</span> into your games.<br>Let your AI do the modding.</h1>
+    <p class="sub">One prompt turns Claude into a careful, log-reading DLSS 5 Neural Rendering
+    installer — it picks the right mod stack for each game, verifies it actually works, and can
+    cleanly undo everything.</p>
+  </div>
+</header>
+
+<main class="wrap">
+
+<section>
+  <div class="card prompt-card">
+    <h2>Copy this into Claude</h2>
+    <p style="color:var(--dim)">Claude Code or Claude Desktop with file access works best — the assistant needs to read and write files on your PC. Swap in your game's name at the end.</p>
+    <pre class="prompt" id="prompt">Fetch https://raw.githubusercontent.com/ThunderRuler/dlss5-installer/main/SKILL.md and follow it exactly. This whole session is for installing DLSS 5 into my games. First game: [GAME NAME]</pre>
+    <button class="copybtn" onclick="copyPrompt()" id="cbtn">Copy prompt</button>
+    <p class="hint">Claude Code users can instead install it as a skill:
+    <code>git clone https://github.com/ThunderRuler/dlss5-installer %USERPROFILE%\.claude\skills\dlss5-installer</code></p>
+  </div>
+</section>
+
+<section>
+  <h2>What happens next</h2>
+  <ol class="steps">
+    <li><b>Safety checks first</b><p>It verifies you have an RTX 50-series GPU and the right driver, warns you that DLSS 5 costs FPS rather than adding it, and flat-out refuses games with anti-cheat — that's a ban risk no mod is worth.</p></li>
+    <li><b>It figures out your game</b><p>Which graphics API the game really runs (not what it claims), where the actual exe lives, and whether it already has DLSS. This decides which of four install recipes applies.</p></li>
+    <li><b>Install, then prove it</b><p>Files go in, the game launches, and the assistant reads the mod's own log files for the line that proves frames are being delivered. No "should work now" — evidence or it keeps debugging.</p></li>
+    <li><b>Undo, any time</b><p>It tracks what it added and can remove it all. Worst case, Steam's <i>Verify integrity of game files</i> restores the game itself.</p></li>
+  </ol>
+</section>
+
+<section>
+  <h2>Know before you start</h2>
+  <div class="dangerbox"><b>Never on multiplayer / anti-cheat games.</b>
+    This works by injecting DLLs into the game — exactly what anti-cheat looks for. The skill refuses these games even if you ask. Bans are often permanent and hardware-level.</div>
+  <div class="warnbox"><b>DLSS 5 Neural Rendering is not an upscaler.</b>
+    It's a neural detail pass that costs roughly <i>half</i> your framerate (measured on an RTX 5070 Ti). People run it because it looks striking, not because it's fast.</div>
+  <div class="warnbox"><b>This uses a leaked, unreleased NVIDIA runtime.</b>
+    The community tools around it are legitimate open source, but <code>nvngx_dlssnr.dll</code> leaked from a game build. This repo never distributes it — the skill only finds and hash-verifies copies already on your machine, and rejects the corrupt copy that's floating around.</div>
+</section>
+
+<section>
+  <h2>What works</h2>
+  <table>
+    <tr><th>Game type</th><th>Verdict</th></tr>
+    <tr><td>64-bit DirectX 12, has DLSS</td><td class="ok">✔ simplest case — one addon</td></tr>
+    <tr><td>64-bit DirectX 11, has DLSS</td><td class="ok">✔ via the DX11 bridge</td></tr>
+    <tr><td>64-bit DX11/DX12, <i>no</i> DLSS at all</td><td class="ok">✔ via DLSS5-Feeder (motion vectors are synthesized)</td></tr>
+    <tr><td>32-bit DirectX 11</td><td class="ok">✔ beta, via a 64-bit helper process</td></tr>
+    <tr><td>DirectX 9 / DX10 / Vulkan / OpenGL</td><td class="no">✘ impossible — don't burn an evening trying</td></tr>
+    <tr><td>Game Pass / Microsoft Store installs</td><td class="no">✘ locked folders, can't be modded this way</td></tr>
+  </table>
+  <p class="hint" style="margin-top:14px">Confirmed working so far: INSIDE, Gunner HEAT PC, Cities: Skylines, Death Stranding DC, Metro 2033 Redux, Baldur's Gate 3, Skyrim SE, and more — see the
+  <a href="https://github.com/ThunderRuler/dlss5-installer/blob/main/references/game-results.md">game results log</a>. Got a result? PRs welcome.</p>
+</section>
+
+<section>
+  <h2>Why an AI skill instead of a written guide?</h2>
+  <div class="grid">
+    <div class="tile"><span class="n">01</span><h3>Every game is different</h3><p>The right stack depends on the game's real runtime API, bitness, engine, and whether DLSS exists — things a fixed guide can't check but an assistant on your PC can.</p></div>
+    <div class="tile"><span class="n">02</span><h3>The logs tell the truth</h3><p>The skill encodes hard-won debugging: which log line proves success, which "healthy-looking" output is meaningless, and which errors are red herrings.</p></div>
+    <div class="tile"><span class="n">03</span><h3>Built from real installs</h3><p>Distilled from hands-on sessions across a dozen games — including the failures, so your assistant recognizes a dead end before you waste hours on it.</p></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p><a href="https://github.com/ThunderRuler/dlss5-installer">GitHub repo</a> &middot;
+       <a href="https://github.com/ThunderRuler/dlss5-installer/blob/main/SKILL.md">read the skill</a> &middot;
+       <a href="https://github.com/ThunderRuler/dlss5-installer/blob/main/references/troubleshooting.md">troubleshooting reference</a></p>
+    <p>Orchestrates work by <a href="https://github.com/clshortfuse/renodx">RenoDX</a>,
+       <a href="https://github.com/jlrouzies-fr/DLSS5-Feeder">DLSS5-Feeder</a>,
+       <a href="https://github.com/NIGos/dlss5-dx11-bridge">dlss5-dx11-bridge</a>,
+       <a href="https://github.com/martymcmodding/iMMERSE">iMMERSE</a>,
+       <a href="https://reshade.me">ReShade</a> and <a href="https://github.com/RankFTW/RHI">RHI</a>. All credit to those authors.</p>
+    <p>Not affiliated with NVIDIA. No NVIDIA binaries are hosted here. Mod at your own risk.</p>
+  </div>
+</footer>
+
+<script>
+function copyPrompt(){
+  const t=document.getElementById('prompt').innerText;
+  navigator.clipboard.writeText(t).then(()=>{
+    const b=document.getElementById('cbtn'); b.textContent='Copied ✔';
+    setTimeout(()=>b.textContent='Copy prompt',1800);
+  });
+}
+</script>
+</body>
+</html>
