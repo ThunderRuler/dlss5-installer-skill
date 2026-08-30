@@ -97,6 +97,8 @@
     This works by injecting DLLs into the game — exactly what anti-cheat looks for. The skill refuses these games even if you ask. Bans are often permanent and hardware-level.</div>
   <div class="warnbox"><b>RTX 50-series is the documented config.</b>
     40- and 30-series reportedly work too but aren't documented here yet &mdash; if you get one working, report it and yours becomes the reference.</div>
+  <div class="warnbox"><b>Games without DLSS are hit and miss.</b>
+    For those the motion vectors have to be reconstructed from the image, which works well in slower scenes but struggles with fast motion, repetitive texture and spinning objects &mdash; a driving sim at speed is close to the worst case. Games that already have DLSS use real engine data and look far better.</div>
   <div class="warnbox"><b>This uses a leaked, unreleased NVIDIA runtime.</b>
     The community tools around it are legitimate open source, but <code>nvngx_dlssnr.dll</code> leaked from a game build. This repo never distributes it — the skill only finds and hash-verifies copies already on your machine, and rejects the corrupt copy that's floating around.</div>
 </section>
@@ -109,7 +111,9 @@
     <tr><td>64-bit DirectX 11, has DLSS</td><td class="ok">✔ via the DX11 bridge</td></tr>
     <tr><td>64-bit DX11/DX12, <i>no</i> DLSS at all</td><td class="ok">✔ via DLSS5-Feeder (motion vectors are synthesized)</td></tr>
     <tr><td>32-bit DirectX 11</td><td class="ok">✔ beta, via a 64-bit helper process</td></tr>
-    <tr><td>DirectX 9 / DX10 / Vulkan / OpenGL</td><td class="no">✘ impossible — don't burn an evening trying</td></tr>
+    <tr><td><b>Vulkan</b></td><td class="ok">✔ works out of the box (ReShade installs as a layer)</td></tr>
+    <tr><td><b>DirectX 9</b></td><td class="ok">✔ via a dgVoodoo2 D3D9→D3D11 wrapper</td></tr>
+    <tr><td>DirectX 10</td><td class="no">✘ the only hard dead end</td></tr>
     <tr><td>Game Pass / Microsoft Store installs</td><td class="no">✘ locked folders, can't be modded this way</td></tr>
   </table>
   <p class="hint" style="margin-top:14px">Confirmed working so far: INSIDE, Gunner HEAT PC, Cities: Skylines, Death Stranding DC, Metro 2033 Redux, Baldur's Gate 3, Skyrim SE, and more — see the

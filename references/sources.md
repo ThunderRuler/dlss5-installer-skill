@@ -34,9 +34,15 @@ news coverage is context only.
 
 ## Key verbatim quotes worth keeping
 
-> "DX9 / DX10 / Vulkan won't work." — DLSS5-Feeder README
+> ~~"DX9 / DX10 / Vulkan won't work."~~ — DLSS5-Feeder README, **superseded 2026-08-30**
 
-> "NGX is 64-bit only. DX9 / DX10 / Vulkan / 32-bit not supported." — DLSS5-Feeder README
+The current README opens instead with: *"DLSS 5 neural rendering in games that ship without
+any DLSS — D3D11, D3D12, Vulkan, 32-bit, even DirectX 9."* Vulkan gained native support in
+v0.5.1, and D3D9 works through a dgVoodoo2 wrapper. **Only D3D10 remains unsupported.**
+Treat any older quote about API support as historical.
+
+> ~~"NGX is 64-bit only. DX9 / DX10 / Vulkan / 32-bit not supported."~~ — **superseded**;
+> NGX itself is still 64-bit only, which is why 32-bit games need the `host64` helper.
 > (the 32-bit part refers to the NGX runtime; the Feeder works around it with a `host64` helper)
 
 > "A game whose D3D9 calls are wrapped to D3D11 works fine" — DLSS5-Feeder README, on BioShock Remastered

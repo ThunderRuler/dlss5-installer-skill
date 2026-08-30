@@ -31,6 +31,7 @@ from the same location, e.g.
 | `references/config-reference.md` | Tuning any config key (`[RenoDX.DLSS5]`, `dlss5-feed.cfg`, bridge cfg) |
 | `references/known-hashes.md` | Verifying the neural runtime DLL is a clean build |
 | `references/game-results.md` | Checking whether this game (or its engine) was tried before |
+| `references/motion-vectors.md` | **Scenario C/D image quality** - provider choice, smearing, ghosting, UI artefacts |
 
 ## Step 0 — before touching anything, three gates
 
@@ -134,10 +135,11 @@ Then read `references/decision-tree.md` and establish, with evidence:
 Then tell the user the plan in one short paragraph — which scenario, which files, where —
 and what the rollback is. Get a go-ahead.
 
-Dead ends to state plainly (from the Feeder's own README): real **D3D9**, **D3D10**,
-**Vulkan**, **OpenGL**, and 32-bit D3D12 are **impossible**. DXVK does not help (it
-produces Vulkan). 32-bit D3D11 works via the Feeder's `host64` helper. Don't let the user
-burn an evening on a Source-engine game.
+Dead ends are now short: **D3D10** and **32-bit D3D12** are impossible. Everything else has
+a path - Vulkan works out of the box since Feeder v0.5.1, real D3D9 works via a dgVoodoo2
+D3D9->D3D11 wrapper, and 32-bit D3D11 works via the `host64` helper. See
+`references/decision-tree.md`; do not repeat the older claim that Vulkan or D3D9 are
+impossible.
 
 ## Step 3 — install
 
@@ -154,9 +156,16 @@ in debugging time:
 - **ReShade's proxy name must be a DLL the game imports** (verify:
   `grep -a -o -i "dxgi\.dll" game.exe`). `dxgi.dll` for D3D11/D3D12. `ReShade64.dll` and
   a wrongly-guessed `opengl32.dll` are the two classic inert names.
-- **Write a preset.** Compiled ≠ enabled. Scenario C needs `ReShadePreset.ini` with
-  `MartysMods_Launchpad` sorted **above** `DLSS5_Feed`, and `EffectSearchPaths` /
+- **Write a preset.** Compiled ≠ enabled. Scenario C needs `ReShadePreset.ini` with the
+  motion-vector provider sorted **above** `DLSS5_Feed`, and `EffectSearchPaths` /
   `TextureSearchPaths` pointing at `reshade-shaders\`.
+- **Deploy a complete ReShade shader set.** `DLSS5_Feed.fx` v0.5.0+ includes
+  `ReShade.fxh`; a minimal Feeder-only folder makes it fail to compile while every other
+  shader builds fine.
+- **Pick a motion-vector provider deliberately** and set `DLSS5_MV_PROVIDER` in **both**
+  `ReShade.ini` and the preset - the preset overrides the global. Confirm the feature
+  exists in the build you deployed; the project's README documents the unreleased tip,
+  not necessarily your release. See `references/motion-vectors.md`.
 - **Verify every copied binary by hash**, never by size or log banner (Feeder versions
   have shipped byte-identical in size, and the banner can print the old version).
 - **Never run the Feeder and the DX11 bridge on the same game.**

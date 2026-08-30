@@ -23,6 +23,45 @@ this table trustworthy. Failures are equally welcome and equally useful.
 
 ## Detailed cases
 
+### BeamNG.drive 0.39 - TECHNICALLY WORKS, NOT RECOMMENDED (2026-08-30)
+
+`...\BeamNG.drive\Bin64\BeamNG.drive.x64.exe` - Torque-derived engine, **D3D12 64-bit**,
+`R8G8B8A8_UNORM` backbuffer, **no native DLSS** -> Scenario C (Feeder v0.6.0-beta.1).
+
+Everything technically succeeded: `NGX Init Success`, `SuperSampling.Available=1`,
+`feature ready: 2560x1440 DLAA`, frames delivered continuously, feed cost only **4% of frame
+time**. Enabling `GEOM_ENABLE` visibly improved world-space quality.
+
+**But the image quality was rejected.** Reconstructed motion vectors are not adequate for a
+driving sim at speed - smeared road, blobby wheels, ghosted HUD, distant shimmer. All four
+of optical flow's failure modes at once (see `motion-vectors.md`). The neural pass also adds
+latency that matters more in a driving game than anywhere else.
+
+**Revisit when BeamNG ships native DLSS** (announced, not released) - it then becomes a clean
+Scenario A install with engine motion vectors and none of this applies.
+
+Notes for anyone trying it:
+- The launcher offers **D3D12 / Vulkan / D3D11 (obsolete)**. D3D12 is default on 0.39+.
+  An old `beamng.log` in an older `%LOCALAPPDATA%\BeamNG.drive\<version>\` folder will
+  report D3D11 and mislead you - check the log's date against the installed version.
+- Real exe is `Bin64\BeamNG.drive.x64.exe`, not the launcher in the root.
+- CPU/physics-bound (~59 fps at 1440p on a 5070 Ti), so **DLDSR 2.25x is a better answer**
+  for shimmer here than any temporal solution - spare GPU headroom, no motion vectors needed.
+
+### Subnautica (2018) - installed, rejected on quality (2026-08-30)
+
+Unity **2019.4.36f1**, D3D11 64-bit, **no native DLSS** -> Scenario C.
+
+**False positive warning:** the game folder contains `nvngx_dlss.dll`, `nvngx_dlssnr.dll`
+and the full `sl.*` Streamline set. **None of it is the game's** - all were sprayed there by
+RHI, dated days ago against 2023/2025 game files. Zero `dlss|nvngx|streamline` strings in the
+engine binary. Same trap applies to The Wolf Among Us, Valheim, Ride.
+
+The `nvngx_dlssnr.dll` present was the **corrupt `4B8D19BC` build** - would have produced
+STANDBY/FAILED if not replaced.
+
+Installed cleanly and ran; user judged the result not worth keeping. Removed.
+
 ### Death Stranding Director's Cut — ✅ working
 `C:\Program Files (x86)\Steam\steamapps\common\DEATH STRANDING DIRECTORS CUT` · `ds.exe` · Steam 1850570
 **D3D12, 64-bit, native DLSS (Streamline)** → Scenario A, `renodx-dlss5.addon64` alone.
@@ -107,13 +146,19 @@ eshade\Shaders\iMMERSE\` - copy `MartysMods_LAUNCHPAD.fx` and the whole
 
 ## Ruled out
 
-### Half-Life 2 — ❌ impossible
-Real **D3D9** device, **32-bit**, no `bin\x64\`. Proven by its own `bin\ReShade.log`:
-`ReShade ... (32-bit) loaded from '...\bin\d3d9.dll' into '...\hl2.exe'`.
+### Half-Life 2 - reclassified 2026-08-30: worth retrying via dgVoodoo2
 
-D3D9/D3D10/Vulkan/OpenGL are all unsupported. DXVK doesn't help — it produces Vulkan.
-The only D3D9 carve-out is a game that *internally* wraps D3D9→D3D11, which HL2 does not.
-See [decision-tree](decision-tree.md#worked-example).
+Real **D3D9**, **32-bit**, no `bind\`. Proven by its own `bin\ReShade.log`:
+`ReShade ... (32-bit) loaded from '...in\d3d9.dll' into '...\hl2.exe'`.
+
+Originally logged here as impossible. **That is no longer accurate:** DLSS5-Feeder now
+documents a D3D9 path via **dgVoodoo2** (D3D9 -> D3D11 translation), confirmed on Fable
+Anniversary, which is also 32-bit D3D9. HL2 fits that shape.
+
+Untested. If you try it, read the dgVoodoo2 section of `decision-tree.md` first - especially
+`DisableAndPassThru = false`, `VRAM = 1GB`, and installing ReShade as `dxgi.dll` (never
+`d3d9.dll`, which dgVoodoo owns). Note DXVK still does **not** help: it produces Vulkan
+by translating D3D9, which is a different path from what the Feeder's Vulkan support expects.
 
 ## Candidate targets in this library
 
@@ -172,12 +217,15 @@ a Vulkan bridge**. Unverified and second-hand — but worth chasing, because if 
 attacks the exact wall that kills Half-Life 2.
 
 Why it's interesting: RTX Remix replaces a fixed-function D3D8/D3D9 renderer wholesale
-rather than wrapping it, so a Source-engine game stops being "a real D3D9 device" — the
-condition that makes D3D9 impossible for every tool in this folder.
+rather than wrapping it, so a Source-engine game stops being "a real D3D9 device" — which
+used to be the blocking condition. Note that as of 2026-08-30 a real D3D9 game also has a
+supported path via dgVoodoo2 (D3D9→D3D11), so Remix is no longer the only option here.
 
 Why to stay sceptical until tested: Remix's runtime is DXVK-derived and presents **Vulkan**,
-and Vulkan is explicitly unsupported by the Feeder ("DX9 / DX10 / Vulkan won't work"). So
-the question to answer first is *what API ReShade actually sees* once Remix is in the chain.
+and Vulkan was unsupported by the Feeder at the time this was written. **That changed on
+2026-08-30** — Vulkan now works out of the box (v0.5.1+), so this lead is worth revisiting
+on its own merits rather than being blocked on the API. The question to answer first is
+*what API ReShade actually sees* once Remix is in the chain.
 If ReShade reports D3D12, this is a real route to Source-engine games. If it reports Vulkan,
 it is another dead end wearing a new hat.
 
@@ -235,7 +283,7 @@ The v0.3.0 `addon64` (MD5 4183E486...) differs from v0.2.0 (B1F2EEB7...) - it is
 **Pattern worth remembering:** the win rate is set almost entirely by API + bitness, and every
 install failure so far has been a wrong proxy DLL name, not a broken tool.
 
-## Routine (UE 5.5) - FAILED, abandoned 2026-08-30
+### Routine (UE 5.5) - FAILED, abandoned 2026-08-30
 
 `C:\Program Files (x86)\Steam\steamapps\common\Routine\Routine\Binaries\Win64`
 

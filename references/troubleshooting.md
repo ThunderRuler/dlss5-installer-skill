@@ -250,3 +250,90 @@ grep -a -o -E "ERoutineAAMethod::[A-Za-z0-9_]+" USERSETTINGS.sav
 A `Start-Job` that waits for a game to exit is destroyed when the invoking shell exits. If a file is
 locked, ask the user to close the game and do the copy directly - a queued swap that never runs
 leaves a **mismatched addon/shader pair**, which is worse than either version alone.
+
+---
+
+# Added 2026-08-30 (second session)
+
+### `could not open included file 'ReShade.fxh'` — Feeder shader fails to compile
+
+```
+Failed to compile 'DLSS5_Feed.fx':
+  (29,1): preprocessor error: could not open included file 'ReShade.fxh'
+```
+
+**DLSS5_Feed.fx v0.5.0+ `#include`s `ReShade.fxh`; v0.3.0 and earlier had no includes at
+all.** If you assembled `reshade-shaders\` by copying a minimal Feeder-only folder from
+another game, the standard ReShade headers are missing and only the new shader breaks —
+LaunchPad compiles fine, which makes it look like a Feeder-specific fault.
+
+Fix: copy a **complete** ReShade shader set (`ReShade.fxh`, `ReShadeUI.fxh`, `Macros.fxh`,
+…), then put the matching `DLSS5_Feed.fx` back on top. RHI-managed `reshade-shaders\`
+folders already contain the headers.
+
+The overlay shows this as a red `[DLSS5_Feed.fx] failed to compile` on the Home tab, and
+`dlss5-feed.log` says `technique MISSING`.
+
+### Documentation drift: the README on `main` describes the *unreleased* build
+
+The Feeder's GitHub README documents the tip of `main`, which can be a beta ahead of the
+release you installed. Configuring a released build against those docs produces settings
+that silently do nothing.
+
+Caught on BeamNG: `DLSS5_MV_PROVIDER` is documented in the README but **does not exist in
+v0.5.2** — the shader has zero occurrences of it. Every value set landed on a shader that
+never reads it, and the log kept reporting `MV provider none`.
+
+**Check the feature exists in the file you actually deployed:**
+```bash
+grep -c "DLSS5_MV_PROVIDER" DLSS5_Feed.fx     # 0 = your build has no provider system
+```
+
+Releases can also move fast — three Feeder releases were published on a single day.
+
+### Preprocessor definitions: the preset overrides the global
+
+ReShade reads preprocessor definitions from **both** `ReShade.ini` `[GENERAL]` and the
+**preset file**, and the preset wins. Setting `DLSS5_MV_PROVIDER` only in `ReShade.ini` can
+be silently overridden. Set it in **both**, or use the overlay's per-effect *Preprocessor
+definitions* panel, which is what the Feeder README prescribes.
+
+### Effects reload repeatedly — temporal history keeps resetting
+
+`dlss5-feed.log` showing many `effect runtime ... destroyed / initialised` cycles means the
+swapchain is being recreated. Every reload wipes the optical-flow history, so motion vectors
+restart from zero and the image smears in bursts.
+
+Usual cause: **exclusive fullscreen**. Use windowed or borderless.
+
+### Technique names are case-sensitive and rarely match the display name
+
+A preset naming a technique that does not exist produces:
+```
+Preset '...\ReShadePreset.ini' uses unknown technique 'X@Y.fx'
+```
+The display name in the overlay is *not* the technique identifier. Read the declaration:
+```bash
+grep -nE "^\s*technique\s+" shader.fx      # e.g. "technique Lumenite_Kernel <"
+```
+LumeniteFX Kernel shows as "LUMENITE: Kernel 2.0" but is declared `Lumenite_Kernel`.
+
+### NGX reports `SuperSampling.Available=0` and blames your GPU
+
+```
+NGX capabilities: SuperSampling.Available=0
+DLSS super sampling is not available on this GPU/driver
+```
+
+Misleading on an RTX 50-series card. **NGX resolves its feature DLLs from the running
+process's own directory.** If `nvngx_dlss.dll` / `nvngx_dlssnr.dll` are in the game's root
+while the exe runs from `Binaries\Win64`, NGX cannot see them.
+
+Fix: put **every** file next to the exe that actually runs. Deploy `nvngx_dlss.dll` even
+for games with no DLSS of their own.
+
+### UI ghosts/smears while the world looks fine
+
+`NRUICorrection` and `NRAutoMask` in the `renodx-dlss5` panel are **both off by default**.
+Turn them on in the overlay (not by editing `reshade.ini` mid-session — ReShade rewrites it
+on shutdown). See `motion-vectors.md` for the `UIMask.fx` fallback.
