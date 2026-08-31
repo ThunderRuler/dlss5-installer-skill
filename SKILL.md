@@ -57,18 +57,47 @@ nvidia-smi --query-gpu=driver_version --format=csv,noheader
   40/30-series user has documentation.
 - **GTX / non-NVIDIA**: stop — NGX requires an RTX GPU.
 
-### Gate 2: Anti-cheat (hard stop, non-negotiable)
+### Gate 2: Anti-cheat and multiplayer
 
-This stack injects DLLs into the game's render pipeline — indistinguishable from a cheat
-to anti-cheat systems. **Refuse to install into any game with anti-cheat or an online
-multiplayer mode**, even if the user insists, even "just for single-player." Bans are
-frequently hardware-level and permanent. Before any install, scan the game folder for:
+This stack injects DLLs into the game's render pipeline. To an anti-cheat system that is
+indistinguishable from a cheat, and bans are frequently hardware-level and permanent.
 
-`EasyAntiCheat*`, `BEService*` / `BattlEye*`, `*FACEIT*`, `Vanguard`, `Ricochet`,
-`nProtect`, `Xigncode`, plus obviously-multiplayer titles by name.
+**Always scan the install first:**
 
-If found: explain the ban risk, refuse, and offer a different game. This is the one rule
-with no override.
+```powershell
+Get-ChildItem <gamedir> -Recurse -Depth 3 -ErrorAction SilentlyContinue |
+  Where-Object Name -match 'EasyAntiCheat|EAC|BEService|BattlEye|Vanguard|nProtect|Xigncode|FACEIT'
+```
+Also check the game binary itself for `easyanticheat|battleye|punkbuster|anticheat` strings.
+
+Then branch on what you find:
+
+**Anti-cheat present -> refuse. No override.**
+Explain the ban risk and offer a different game. This is the one rule the user cannot talk
+you out of, however they frame it ("only single-player", "I'll uninstall after").
+
+**Multiplayer or online play, but the scan is clean -> STOP AND WARN. Do not install yet.**
+A clean scan is *not* proof of safety. It cannot see:
+- anti-cheat enforced **server-side** rather than shipped in the install
+- anti-cheat added in a **future game update**
+- **specific servers** (especially modded or community ones) that ban injected DLLs
+- the rules of a server someone else runs
+
+Tell the user plainly: *"This game has multiplayer and I found no anti-cheat in the files,
+but that isn't conclusive. Please double-check — the game's own rules, its anti-cheat page,
+and any server you play on — and confirm before I install anything."* **Wait for an explicit
+confirmation.** Do not proceed on an earlier general go-ahead; this needs its own yes.
+
+Once they confirm, install normally and note it in the game-results entry so the next
+person sees the same caveat.
+
+**Single-player only, scan clean -> proceed.**
+
+Worth telling the user: this stack is **post-processing only**. It does not read or modify
+game state and confers no competitive advantage — which is why games with no anti-cheat and
+an established visual-mod culture (Valheim, Terraria, Stardew Valley, Deep Rock Galactic)
+are ordinarily fine. That does not make it safe in a game that *does* run anti-cheat, where
+the detection is on injection itself, not on intent.
 
 ### Gate 3: Unmoddable installs
 

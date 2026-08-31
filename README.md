@@ -47,7 +47,7 @@ straight from this repo, so it never goes stale.
 |---|---|
 | **NVIDIA RTX GPU** — 50-series + driver 616.56+ is the documented config | 40/30-series reportedly works too, but is undocumented here so far — if you get it working, [tell us](https://github.com/ThunderRuler/dlss5-installer/issues/new/choose)! |
 | Windows + Steam/GOG/Epic games | Game Pass installs are locked and can't be modded this way |
-| A single-player game **without anti-cheat** | The skill hard-refuses anti-cheat titles — injecting DLLs gets you banned |
+| A game **without anti-cheat** | The skill scans and hard-refuses anti-cheat titles — injecting DLLs gets you banned. For multiplayer games with none found, it stops and asks you to verify first |
 | DirectX 9/11/12 or Vulkan | Only **DirectX 10** has no path at all |
 
 ## How the community loop works
