@@ -1,4 +1,4 @@
-# dlss5-installer
+# dlss5-installer-skill
 
 **A copy-paste skill that turns Claude (or any capable LLM with file access) into a
 guided DLSS 5 Neural Rendering installer for your games.**
