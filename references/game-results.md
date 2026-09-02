@@ -42,7 +42,7 @@ reconstructed ones - the two things that go wrong most often are both solved at 
 
 ## Add your result
 
-**Easiest:** [open a game result issue](https://github.com/ThunderRuler/dlss5-installer/issues/new/choose)
+**Easiest:** [open a game result issue](https://github.com/ThunderRuler/dlss5-installer-skill/issues/new/choose)
 and it gets added for you — no git needed.
 
 **Or edit directly:** click the pencil icon on this file and add a row to the table below.

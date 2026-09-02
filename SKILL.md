@@ -20,7 +20,7 @@ unworkable), ask which game is next.
 This file is the procedure. Detailed reference lives in the `references/` folder next to
 this file. If you were given this file by URL instead (no local folder), fetch references
 from the same location, e.g.
-`https://raw.githubusercontent.com/ThunderRuler/dlss5-installer/main/references/<name>.md`.
+`https://raw.githubusercontent.com/ThunderRuler/dlss5-installer-skill/main/references/<name>.md`.
 
 | Reference | Read it when |
 |---|---|
@@ -166,7 +166,7 @@ and shader from the **same release** as a matched pair — and iMMERSE LaunchPad
 
 **First, check whether someone already solved this game.** Fetch the current community
 log — not just your local copy, which may be stale:
-`https://raw.githubusercontent.com/ThunderRuler/dlss5-installer/main/references/game-results.md`
+`https://raw.githubusercontent.com/ThunderRuler/dlss5-installer-skill/main/references/game-results.md`
 A match on the game (or its engine) can hand you the scenario, the launch options, and
 the known failure modes before you touch anything. Tell the user what you found.
 
@@ -247,25 +247,76 @@ Some games genuinely cannot work yet (e.g. a 10-bit `R10G10B10A2_UNORM` backbuff
 crashing the addon's `CreateFeature`) — an honest "this one's blocked upstream, here's
 the exact reason" beats an endless loop. Offer to revert.
 
-## Step 5 — share the result (the whole point of the log)
+## Step 5 — share the result (do this every time, not just on success)
 
-When a game reaches a definitive state — **working** (proof line seen) or **definitively
-failed** (root cause identified) — offer to report it so the next person with this game
-starts from the answer instead of from scratch. With the user's consent:
+The log is the reason this skill is worth more than a blog post, and it only stays that
+way if results flow back. **Treat reporting as part of finishing the job, not an optional
+extra.** You pulled the log down in Step 2; closing the loop is what earns the next
+person that head start.
 
-- **Preferred:** open a prefilled game-result issue. With the `gh` CLI:
-  ```
-  gh issue create --repo ThunderRuler/dlss5-installer --label "game result"     --title "[Game] <name> — <working|failed>" --body "<details>"
-  ```
-  Otherwise give the user this link to click and paste into:
-  `https://github.com/ThunderRuler/dlss5-installer/issues/new?template=game-result.yml`
-- Include: game + store, engine, runtime API (from `ReShade.log`), scenario, GPU +
-  driver, the **proof line** (or the failing line + backbuffer format), and any launch
-  options or config that mattered.
-- Never include: file paths containing the user's name, and never any DLL or link to one.
+### When to offer
 
-A 40/30-series success report is especially valuable — it would be the first documented
-one. Skip the offer if the user already declined once this session.
+The moment the game reaches a **definitive state** — not at the end of the session, not
+when the user says goodbye. Definitive means one of:
+
+- **Working** — you have the proof line and the user has confirmed how it looks.
+- **Works but not worth it** — installs cleanly, user judged no visible benefit. **This
+  counts and is worth reporting.** It is the single most useful category and the most
+  under-reported, because nobody feels like filing a "nothing happened" report. Say so
+  plainly: a documented null saves the next person an evening.
+- **Failed with a root cause** — you know *why*, not just that it broke.
+
+Do **not** offer while still debugging, or for a partial result. A half-diagnosed failure
+in the log is worse than no entry.
+
+### How to offer
+
+One sentence, default-yes, no ceremony. You write the report; the user only approves it:
+
+> "Want me to add this to the community log? It'll save the next person with this game the
+> hour we just spent."
+
+Then **draft the full report yourself** and show it before sending. Never hand the user a
+blank form and ask them to fill it in — you have the log, the API, the scenario and the
+proof line already. Making them re-type it is how reports don't get filed.
+
+If they decline, drop it and don't ask again this session.
+
+### How to send it
+
+**If `gh` is installed and authenticated** (`gh auth status` succeeds) — just file it:
+
+```
+gh issue create --repo ThunderRuler/dlss5-installer-skill --label "game result"   --title "[Game] <name> — <working|no benefit|failed>" --body "<the drafted report>"
+```
+
+**Otherwise** — build a **prefilled link** so the user only has to tick the two
+confirmation boxes and press submit. The issue form accepts field values as query
+parameters (`game`, `outcome`, `scenario`, `engine`, `proof`, `gpu`, `notes`):
+
+```
+https://github.com/ThunderRuler/dlss5-installer-skill/issues/new?template=game-result.yml&game=<...>&engine=<...>&proof=<...>
+```
+
+URL-encode each value. The checkboxes deliberately cannot be prefilled — the user
+confirms those themselves. Do not fall back to "here's a blank form, go fill it in."
+
+### What goes in
+
+Game + store, engine, **runtime API taken from `ReShade.log`** (not from the store page or
+your assumption — this is the field most often wrong, and GHPC was logged as D3D11 for
+days when it is D3D12), scenario, GPU + driver, the **proof line verbatim** (or for a
+failure, the failing line plus the backbuffer format), and any launch option or config
+that mattered.
+
+**Never include:** file paths containing the user's name, and never any NVIDIA DLL or a
+link to one.
+
+### Especially valuable reports
+
+- **A 40- or 30-series success.** Still zero documented. It would become the reference.
+- **A null result on a photoreal game**, which would cut against the current pattern.
+- **A D3D9-via-dgVoodoo2 result**, which would unblock a whole category.
 
 ## Removal / rollback (offer it, any time)
 

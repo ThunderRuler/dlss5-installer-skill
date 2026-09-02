@@ -85,7 +85,7 @@ body:
     attributes:
       label: Please confirm
       options:
-        - label: This is a single-player game with no anti-cheat.
+        - label: This game does not run anti-cheat (EasyAntiCheat, BattlEye, Vanguard, or similar).
           required: true
         - label: I have not attached or linked any NVIDIA DLL — this project never distributes those.
           required: true

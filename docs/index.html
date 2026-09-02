@@ -74,10 +74,10 @@
   <div class="card prompt-card">
     <h2>Copy this into Claude</h2>
     <p style="color:var(--dim)">Claude Code or Claude Desktop with file access works best — the assistant needs to read and write files on your PC. Swap in your game's name at the end.</p>
-    <pre class="prompt" id="prompt">Fetch https://raw.githubusercontent.com/ThunderRuler/dlss5-installer/main/SKILL.md and follow it exactly. This whole session is for installing DLSS 5 into my games. First game: [GAME NAME]</pre>
+    <pre class="prompt" id="prompt">Fetch https://raw.githubusercontent.com/ThunderRuler/dlss5-installer-skill/main/SKILL.md and follow it exactly. This whole session is for installing DLSS 5 into my games. First game: [GAME NAME]</pre>
     <button class="copybtn" onclick="copyPrompt()" id="cbtn">Copy prompt</button>
     <p class="hint">Or install it as a real skill in Claude Code (and ~20 other agents):
-    <code>npx skills add ThunderRuler/dlss5-installer</code></p>
+    <code>npx skills add ThunderRuler/dlss5-installer-skill</code></p>
   </div>
 </section>
 
@@ -123,7 +123,7 @@
   <p class="hint" style="margin-top:14px"><b>"Works" and "worth it" are different questions.</b> Plenty of games install cleanly and then look
   identical &mdash; INSIDE, Journey, Subnautica and Valheim all did. The clearest wins so far are photoreal games that already ship DLSS:
   Death Stranding DC is the reference case, with Metro 2033 Redux, Baldur's Gate 3 and Skyrim SE reported by the tool authors. The
-  <a href="https://github.com/ThunderRuler/dlss5-installer/blob/main/references/game-results.md">game results log</a> records both outcomes, because a
+  <a href="https://github.com/ThunderRuler/dlss5-installer-skill/blob/main/references/game-results.md">game results log</a> records both outcomes, because a
   documented null result saves the next person an evening. Got a result either way? PRs welcome.</p>
 </section>
 
@@ -140,9 +140,9 @@
 
 <footer>
   <div class="wrap">
-    <p><a href="https://github.com/ThunderRuler/dlss5-installer">GitHub repo</a> &middot;
-       <a href="https://github.com/ThunderRuler/dlss5-installer/blob/main/SKILL.md">read the skill</a> &middot;
-       <a href="https://github.com/ThunderRuler/dlss5-installer/blob/main/references/troubleshooting.md">troubleshooting reference</a></p>
+    <p><a href="https://github.com/ThunderRuler/dlss5-installer-skill">GitHub repo</a> &middot;
+       <a href="https://github.com/ThunderRuler/dlss5-installer-skill/blob/main/SKILL.md">read the skill</a> &middot;
+       <a href="https://github.com/ThunderRuler/dlss5-installer-skill/blob/main/references/troubleshooting.md">troubleshooting reference</a></p>
     <p>Orchestrates work by <a href="https://github.com/clshortfuse/renodx">RenoDX</a>,
        <a href="https://github.com/jlrouzies-fr/DLSS5-Feeder">DLSS5-Feeder</a>,
        <a href="https://github.com/NIGos/dlss5-dx11-bridge">dlss5-dx11-bridge</a>,

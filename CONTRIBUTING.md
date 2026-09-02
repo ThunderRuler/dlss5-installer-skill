@@ -8,7 +8,7 @@ and the log line proving it. Failures are just as valuable as successes: knowing
 
 ### The easy way (no git required)
 
-**[Open a game result issue](https://github.com/ThunderRuler/dlss5-installer/issues/new/choose)**
+**[Open a game result issue](https://github.com/ThunderRuler/dlss5-installer-skill/issues/new/choose)**
 and fill in the form. It gets added to the results log for you. This is the preferred
 route — you don't need a GitHub account beyond signing in, and you can't get the
 formatting wrong.

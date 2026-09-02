@@ -1,5 +1,5 @@
 <!-- Adding a game result? You don't have to open a PR — an issue is easier and just as
-     welcome: https://github.com/ThunderRuler/dlss5-installer/issues/new/choose -->
+     welcome: https://github.com/ThunderRuler/dlss5-installer-skill/issues/new/choose -->
 
 ## What this changes
 

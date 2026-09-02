@@ -9,14 +9,14 @@ installs the right stack (RenoDX DLSS5 + ReShade + DLSS5-Feeder or the DX11 brid
 and then **verifies from the log files** instead of just saying "done!". If something
 breaks, it debugs one variable at a time — and it can cleanly remove everything.
 
-> 🌐 **Start here: [the project page](https://thunderruler.github.io/dlss5-installer/)** —
+> 🌐 **Start here: [the project page](https://thunderruler.github.io/dlss5-installer-skill/)** —
 > it has the copy-paste prompt and a plain-English explanation.
 
 ## Quick start
 
 ### Option 1 — paste this into Claude (or your LLM of choice)
 
-> Fetch https://raw.githubusercontent.com/ThunderRuler/dlss5-installer/main/SKILL.md and
+> Fetch https://raw.githubusercontent.com/ThunderRuler/dlss5-installer-skill/main/SKILL.md and
 > follow it exactly. This whole session is for installing DLSS 5 into my games.
 > First game: **<game name>**
 
@@ -26,7 +26,7 @@ a URL and run commands on your PC.
 ### Option 2 — install it properly (one command)
 
 ```bash
-npx skills add ThunderRuler/dlss5-installer
+npx skills add ThunderRuler/dlss5-installer-skill
 ```
 
 Installs into Claude Code and ~20 other agents (Cursor, Codex, Copilot, Gemini CLI,
@@ -45,7 +45,7 @@ straight from this repo, so it never goes stale.
 
 | Requirement | Why |
 |---|---|
-| **NVIDIA RTX GPU** — 50-series + driver 616.56+ is the documented config | 40/30-series reportedly works too, but is undocumented here so far — if you get it working, [tell us](https://github.com/ThunderRuler/dlss5-installer/issues/new/choose)! |
+| **NVIDIA RTX GPU** — 50-series + driver 616.56+ is the documented config | 40/30-series reportedly works too, but is undocumented here so far — if you get it working, [tell us](https://github.com/ThunderRuler/dlss5-installer-skill/issues/new/choose)! |
 | Windows + Steam/GOG/Epic games | Game Pass installs are locked and can't be modded this way |
 | A game **without anti-cheat** | The skill scans and hard-refuses anti-cheat titles — injecting DLLs gets you banned. For multiplayer games with none found, it stops and asks you to verify first |
 | DirectX 9/11/12 or Vulkan | Only **DirectX 10** has no path at all |
@@ -78,7 +78,7 @@ references/
 
 Got it working — or definitively *not* working — in a game that isn't logged yet?
 
-**[Open a game result issue](https://github.com/ThunderRuler/dlss5-installer/issues/new/choose)**
+**[Open a game result issue](https://github.com/ThunderRuler/dlss5-installer-skill/issues/new/choose)**
 and fill in the form. No git required, and it gets added to
 [`references/game-results.md`](references/game-results.md) for you. Prefer to edit the file
 yourself? That works too — see [CONTRIBUTING.md](CONTRIBUTING.md).
