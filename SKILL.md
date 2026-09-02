@@ -108,6 +108,29 @@ launchers** that self-verify files.
 (No lecture needed on performance — anyone asking for DLSS 5 knows it's a neural detail
 pass, not an upscaler. Mention the FPS cost only if the user asks or seems surprised.)
 
+### Gate 4: Is this game a good candidate at all?
+
+Not a refusal — a one-line heads-up before spending the user's time.
+
+**Stylized games get little or nothing from this.** DLSS 5 NR restores micro-detail and
+material nuance that a renderer approximated away, so it only reads as an improvement when
+the game is *chasing photorealism and falling short*. Flat colour, hand-painted texture,
+low-poly geometry, deliberate non-photoreal lighting — there is no missing realism for the
+model to put back. Every stylized title tested so far (Journey, INSIDE, Subnautica,
+Valheim) installed fine and looked identical.
+
+If the target is clearly stylized, say so before installing: *"This is likely to look the
+same afterwards — NR mainly helps photoreal games. Want me to do it anyway?"* Then respect
+whatever they say; plenty of people want to see for themselves, and a documented null
+result is still a useful result worth logging.
+
+Also flag **fast-motion games** (racing, driving, high-speed action) without native DLSS.
+Those fail differently — reconstructed motion vectors smear at speed. See BeamNG in
+`references/game-results.md`.
+
+The best candidates are photoreal games that already ship **native DLSS** (Scenario A/B):
+they supply real engine motion vectors, which removes the other main failure mode too.
+
 ## Step 1 — component check (first game only)
 
 The user needs four things you cannot ship. Locate each before promising anything:

@@ -3,6 +3,43 @@
 Seeded from the author's test machine (RTX 5070 Ti, driver 616.56). The detailed
 write-ups below are deep-dive cases; the table is where community results go.
 
+## Which games actually benefit
+
+The strongest pattern in this log is not about API, engine, or scenario. It is about
+**art direction**, and it shows up over and over:
+
+> **Stylized games get little or nothing from DLSS 5 NR. Games chasing photorealism are
+> where it earns its cost.**
+
+DLSS 5 Neural Rendering is a *detail and material* pass. It infers plausible micro-detail,
+surface response and shading nuance that a renderer approximated away. That only reads as
+an improvement when the game is trying to look like the real world and falling short. When
+a game's look is deliberate and non-photoreal - flat colour, hand-painted texture, low-poly
+geometry, heavy stylized lighting - there is no "missing realism" for the model to restore.
+It either does nothing visible, or it fights the art direction and makes things look worse.
+
+Judged on this machine so far:
+
+| Game | Look | Verdict |
+|---|---|---|
+| Death Stranding DC | photoreal | ✅ the reference case - clearly better |
+| Journey | stylized, flat, painterly | ❌ no benefit |
+| INSIDE | stylized, minimal, silhouette-driven | ❌ no benefit |
+| Subnautica | stylized | ❌ no benefit |
+| Valheim | heavily stylized low-poly | ❌ works, but no benefit |
+| BeamNG.drive | photoreal, but fast motion | ❌ rejected - motion vectors, not art style |
+
+Note the last row is a *different* failure. BeamNG is photoreal and should have been a good
+candidate; it failed on reconstructed motion vectors at speed, not on art direction. Keep
+the two causes separate when triaging - "no visible change" and "smears when moving" are
+different problems with different fixes.
+
+**Practical guidance before installing:** if the game is stylized, say so up front and let
+the user decide whether to spend the time. An install takes 10-20 minutes and the answer is
+usually "it looks the same." Photoreal titles with native DLSS (Scenario A/B) are the best
+use of anyone's effort, because they also supply real engine motion vectors instead of
+reconstructed ones - the two things that go wrong most often are both solved at once.
+
 ## Add your result
 
 **Easiest:** [open a game result issue](https://github.com/ThunderRuler/dlss5-installer/issues/new/choose)
@@ -22,6 +59,64 @@ this table trustworthy. Failures are equally welcome and equally useful.
 | _(example — replace or add below)_ | Unity, D3D11 64-bit | C (Feeder) | ✅ working | `[feed] frame 21600 delivered (2560x1440, reset=0)` | @you |
 
 ## Detailed cases
+
+### Gunner, HEAT, PC! - D3D12, crashed on resize under Feeder 0.2.0 (2026-08-30)
+
+**Symptom:** game ran fine for several seconds, then died with a *Microsoft Visual C++
+Runtime Library - "requested the Runtime to terminate it in an unusual way"* dialog.
+
+**What the log actually showed.** The first session was completely healthy:
+
+```
+[feed] feature ready: 2560x1440 DLAA, flags=74 (SDR MVLowRes DepthInverted AutoExposure)
+[feed] frame 1 delivered (2560x1440, reset=1)
+[feed] 600 frames: feed CPU 2.47 ms/frame | frame interval 7.31 ms (136.7 fps)
+```
+
+Then a swapchain resize arrived and everything unwound:
+
+```
+Redirecting IDXGISwapChain::ResizeBuffers(BufferCount = 2, Width = 2560, Height = 1440, ...)
+Destroyed runtime environment on runtime ...
+[feed] CreateFeature raised exception 0xC0000005 (caught; nothing was submitted)
+[feed] failure: resource build
+[feed] ReleaseFeature raised exception 0xC0000005 (ignored)
+```
+
+The Feeder *catches* the CreateFeature access violation, but the follow-up
+`ReleaseFeature` AV is what takes the process down. **A crash several seconds in, right
+after the game settles its display mode, is the signature of this bug** - not a bad
+install. Note the resize is to the *same* 2560x1440; the game is changing swap flags
+(`0x842`), not resolution, so "but I didn't change my resolution" does not rule it out.
+
+**Two things this case corrected:**
+
+1. **GHPC is D3D12, not D3D11.** An earlier entry here had it wrong. The tell is
+   `LoadLibrary('d3d12.dll')` and `D3D12CreateDevice` in `ReShade.log`, plus the
+   `[feed] Color: D3D12->D3D11 path failed 0x80070057, trying the other direction`
+   lines - that interop dance only happens on D3D12, and it is where the rebuild dies.
+2. **It was still on Feeder 0.2.0.** 0.2.0 has no `DLSS5_MV_PROVIDER` support at all, so
+   its motion vectors were on the crude default path regardless of what the preset said.
+
+**Do not misdiagnose this as a corrupt runtime.** The obvious suspect is a bad
+`nvngx_dlssnr.dll`, which produces access violations in the same place. It was ruled out
+by hash in seconds:
+
+```powershell
+Get-FileHash "<gamedir>
+vngx_dlssnr.dll" -Algorithm SHA256
+# E16BCF15... = known-good. 4B8D19BC... = known-bad, replace it.
+```
+
+**Fix applied:** upgraded to Feeder **0.6.0-beta.1** (addon + `DLSS5_Feed.fx`), added the
+standard ReShade headers that v0.5+ `#include`s (`ReShade.fxh` and friends - the minimal
+3-file shader tree does *not* compile on v0.6), and set `DLSS5_MV_PROVIDER=1` in **both**
+`reshade.ini` and `ReShadePreset.ini`.
+
+**Workaround if it still crashes on a later version:** run the game **borderless
+windowed at native resolution** so `ResizeBuffers` never fires. That avoids the rebuild
+path entirely rather than fixing it.
+
 
 ### BeamNG.drive 0.39 - TECHNICALLY WORKS, NOT RECOMMENDED (2026-08-30)
 
@@ -209,6 +304,29 @@ ReShade.log evidence:
 Problems + fixes:
 ```
 
+### Killing Floor 1 - not attempted, three separate reasons (2026-08-30)
+
+Requested, scanned, and stopped before installing. Each of these alone is a yellow flag;
+together they make it the weakest candidate in this log.
+
+1. **32-bit D3D9.** `KillingFloor.exe` is `machine=0x014c` (32-bit) and `System\` ships
+   `D3D9Drv.dll`, `D3DDrv.dll` and `OpenGLDrv.dll` - Unreal Engine 2.5, no D3D11 path at
+   all. The only route is dgVoodoo2 (D3D9->D3D11) *and then* the 32-bit `host64` helper,
+   which is **four stacked approximations**. For comparison, Red Faction Re-MARS-tered
+   needed only two and was still judged underwhelming.
+2. **Online co-op.** The file scan came back clean - no EasyAntiCheat, BattlEye or similar
+   binaries, and no anti-cheat strings in the exe. Per Gate 2 a clean scan on a multiplayer
+   game is **not** clearance: it cannot see server-side enforcement or individual server
+   rules, and KF1 has a large community-server population. This needs explicit user
+   confirmation before anything is installed.
+3. **Art direction.** A 2009 UE2.5 title with low-resolution textures and simple geometry
+   is exactly the profile that has produced no visible benefit every time so far.
+
+**Verdict:** not worth the user's time unless they specifically want to prove the
+dgVoodoo2 chain works. If someone does try it, the interesting result is *whether ReShade
+sees a D3D11 device at all* once dgVoodoo2 is in the chain - that answer generalises to
+every other D3D9 game in this log.
+
 ## Open leads
 
 ### GMOD via RTX Remix + Vulkan bridge (Discord report, 2026-08-30)
@@ -258,7 +376,7 @@ Feeder install exists, repeat it on Subnautica / INSIDE with confidence.
 
 | Game | API | Bits | DLSS | Scenario | Result |
 |---|---|---|---|---|---|
-| Gunner, HEAT, PC! | D3D11 | 64 | none | C Feeder | WORKING. Exe is in `Bin\` - install there, not game root. |
+| Gunner, HEAT, PC! | **D3D12** | 64 | none | C Feeder | Exe is in `Bin\` - install there, not game root. **Corrected 2026-08-30: this is D3D12, not D3D11** (earlier entry was wrong). On Feeder 0.2.0 it ran ~600 frames then hard-crashed the process on a swapchain resize - see the detailed case. |
 | Cities: Skylines (1) | D3D11 | 64 | none | C Feeder | WORKING. CPU-bound game; Feeder's ~1 ms/frame actually costs here. |
 | Control | D3D12 | 64 | native | A | installed. `Control_DX12.exe` - must NOT launch the DX11 exe. |
 | Routine | D3D12 | 64 | native | A | installed to `Routine\Routine\Binaries\Win64\` next to `Routine-Win64-Shipping.exe` (root `Routine.exe` is only a launcher). |
@@ -269,6 +387,7 @@ Feeder install exists, repeat it on Subnautica / INSIDE with confidence.
 | Mirror's Edge | **D3D10**/D3D9 | 32 | - | - | DEAD (D3D10 is separately unsupported, not just D3D9) |
 | Garry's Mod | Source/D3D9 | 32 | - | - | DEAD by normal rules - see the RTX Remix open lead above |
 | The Wolf Among Us | **D3D9** | 32 | - | - | DEAD |
+| Killing Floor 1 | **D3D9** (UE2.5; `D3D9Drv.dll`/`D3DDrv.dll`/`OpenGLDrv.dll`) | **32** | none | - | NOT ATTEMPTED. Worst-case stack: 32-bit *and* D3D9 *and* online co-op. See the note below. |
 
 **Why Control is the highest-value target:** the addon builds a *"Control-equivalent soft-clip/sRGB/
 UpgradeToneMap codec"* - that string appears in every game's log. Control is the calibration
