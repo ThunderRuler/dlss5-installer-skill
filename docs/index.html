@@ -87,7 +87,8 @@
     <li><b>Safety checks first</b><p>It checks your GPU and driver, and flat-out refuses games with anti-cheat — that's a ban risk no mod is worth. Then it checks the community log: if someone already solved your game, you start from their answer.</p></li>
     <li><b>It figures out your game</b><p>Which graphics API the game really runs (not what it claims), where the actual exe lives, and whether it already has DLSS. This decides which of four install recipes applies.</p></li>
     <li><b>Install, then prove it</b><p>Files go in, the game launches, and the assistant reads the mod's own log files for the line that proves frames are being delivered. No "should work now" — evidence or it keeps debugging.</p></li>
-    <li><b>Share the result</b><p>Working or definitively not, the assistant offers to report the outcome back to the community log — so every install makes the next person's easier. (And undo is one ask away: it tracks what it added; worst case, Steam's <i>Verify integrity</i> restores the game.)</p></li>
+    <li><b>Undo whenever you want</b><p>It tracks every file it added, so removal is one ask away and exact. Worst case, Steam's <i>Verify integrity</i> restores the game.</p></li>
+    <li><b>It asks to share what it learned</b><p>Once <i>you've</i> confirmed the result — working, or working-but-pointless, or a dead end with a known cause — the assistant writes up the whole report itself and asks whether to file it. You're approving, not filling in a form. This is the part that compounds: every answer that goes back in is an evening someone else doesn't lose. Say no and it drops it.</p></li>
   </ol>
 </section>
 
@@ -124,7 +125,7 @@
   identical &mdash; INSIDE, Journey, Subnautica and Valheim all did. The clearest wins so far are photoreal games that already ship DLSS:
   Death Stranding DC is the reference case, with Metro 2033 Redux, Baldur's Gate 3 and Skyrim SE reported by the tool authors. The
   <a href="https://github.com/ThunderRuler/dlss5-installer-skill/blob/main/references/game-results.md">game results log</a> records both outcomes, because a
-  documented null result saves the next person an evening. Got a result either way? PRs welcome.</p>
+  documented null result saves the next person an evening. <b>If you run this, please let it file your result</b> — working or not. That is the entire mechanism by which this list gets better.</p>
 </section>
 
 <section>

@@ -52,11 +52,25 @@ straight from this repo, so it never goes stale.
 
 ## How the community loop works
 
-Before installing, your assistant checks
+**Read first, then write back.** Before installing, your assistant checks
 [`references/game-results.md`](references/game-results.md) for your game — if someone
-already got it working (or proved it can't), you start from their answer. When *your*
-install reaches a definitive result, the assistant offers to report it back with one
-click. Every install makes the next one easier.
+already got it working (or proved it can't), you start from their answer instead of from
+scratch.
+
+Once *you've* confirmed how your install turned out, the assistant writes the report
+itself — game, engine, real runtime API, scenario, the proof line from the log — and asks
+whether to file it. **You're approving a finished report, not filling in a form.**
+
+**Please say yes.** This is the only mechanism by which the log gets better, and it takes
+you about fifteen seconds. That includes the boring outcomes:
+
+- **"It installed fine and looked identical"** is one of the most valuable reports there
+  is. Nobody files these, so everyone keeps rediscovering the same dead ends.
+- **A failure with a known cause** saves someone an entire evening.
+- **A 40- or 30-series success** would be the first documented one, and yours would become
+  the reference.
+
+Nothing is sent without your say-so, and no NVIDIA DLLs are ever attached or linked.
 
 ## What's in the repo
 

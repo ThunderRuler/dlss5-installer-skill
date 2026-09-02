@@ -269,18 +269,37 @@ when the user says goodbye. Definitive means one of:
 Do **not** offer while still debugging, or for a partial result. A half-diagnosed failure
 in the log is worse than no entry.
 
-### How to offer
+### How to ask
 
-One sentence, default-yes, no ceremony. You write the report; the user only approves it:
+**Ask. Every time.** The most common failure of this skill is not a broken install — it
+is a solved game that never made it into the log, so the next three people solve it again
+from scratch. You have just spent an hour of the user's time; asking for fifteen seconds
+of it back is reasonable, and most people say yes when it is made easy.
 
-> "Want me to add this to the community log? It'll save the next person with this game the
-> hour we just spent."
+The sequence is: **user confirms it looks right -> you write up the result -> you ask.**
+Not before they have judged it, and not left to the end of the session.
 
-Then **draft the full report yourself** and show it before sending. Never hand the user a
-blank form and ask them to fill it in — you have the log, the API, the scenario and the
-proof line already. Making them re-type it is how reports don't get filed.
+Ask directly and with the work already done:
 
-If they decline, drop it and don't ask again this session.
+> "This one's solved. Want me to file it to the community log? I've got everything I need
+> from the session — you'd just be approving it. It means the next person with this game
+> gets a working answer instead of an evening of debugging."
+
+Then **show the drafted report** and let them approve or edit it.
+
+Things that make people say no, so avoid them:
+
+- Making it sound like a chore — it is one click for them, so say so.
+- Asking before they have confirmed the result, so the ask arrives mid-uncertainty.
+- Burying it in a paragraph about something else (removal, next steps, caveats).
+- Apologising for asking, or making it so tentative it reads as "you probably shouldn't."
+- Handing over a blank form. If they say yes and *then* get asked to type it all out,
+  they will abandon it.
+
+If they decline, accept it in one line and never raise it again this session.
+
+**You are not finished with a game until you have either filed the result or been told
+no.** Treat an unreported solved game the same as an unverified install: incomplete work.
 
 ### How to send it
 
