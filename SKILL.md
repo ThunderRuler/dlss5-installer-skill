@@ -183,7 +183,7 @@ The user needs these, which you cannot ship. Locate each before promising anythi
 
 Scenario B additionally needs `dlss5-bridge.addon64` (**renamed** from
 `dlss5-dx11-bridge`; delete the old file). Scenario C/D additionally needs the
-**DLSS5-Feeder** (v1.17.0 at time of writing) — addon and `DLSS5_Feed.fx` from the **same
+**DLSS5-Feeder** (v1.19.0 (current stable, released 2026-09; earlier "v1.17.0" label was the point in writing)) — addon and `DLSS5_Feed.fx` from the **same
 release** — plus a motion-vector provider (LumeniteFX Kernel recommended; iMMERSE
 LaunchPad is **no longer required**). Get Feeder and bridge only from their GitHub
 Releases pages — lookalike sites distribute malware (see the end of
