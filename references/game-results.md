@@ -109,8 +109,7 @@ install. Note the resize is to the *same* 2560x1440; the game is changing swap f
 by hash in seconds:
 
 ```powershell
-Get-FileHash "<gamedir>
-vngx_dlssnr.dll" -Algorithm SHA256
+Get-FileHash "<gamedir>\nvngx_dlssnr.dll" -Algorithm SHA256
 # E16BCF15... = known-good. 4B8D19BC... = known-bad, replace it.
 ```
 
