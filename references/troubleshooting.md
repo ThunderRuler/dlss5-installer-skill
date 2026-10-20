@@ -45,7 +45,7 @@ Ranked by likelihood:
 
 1b. **Old consumer on a new driver.** Driver **616.64+** with `renodx-dlss5` **v4.6 or
    v4.7** (the "lazy-adoption" builds) faults inside `nvngx_dlssnr.dll` (Feeder issue #54):
-   the evaluate crashes or returns nothing. Classic v4.55 passes the Feeder's test, but
+   the evaluate crashes or returns nothing. Classic v4.5 passes the Feeder's test, but
    classic **v4.1.5 degraded silently** in Death Stranding DC on 616.92 (NR on ~1
    frame/sec — see "Flicker" below); v5.x is untested. Check the addon version (RHI:
    `%LOCALAPPDATA%\RHI\rdx5\version.txt`;
