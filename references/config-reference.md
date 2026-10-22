@@ -136,7 +136,7 @@ first line is `# dlss5-bridge keep`.
 | `shape` | 0 | `1` fixed `0xBAD00005` in PSO2 |
 | `ngx_loader` | 0 | workaround for drivers 32.0.16.1664/1686 crashing with dlssnr 310.8.0 |
 | `unwrap` / `unwrap_list` | 1 / 0 | set `unwrap=0` on Linux/Proton substitute setups |
-| `reset_every`, `pixels`, `dred`=1, `skip_exe`=1, `probe`, `stall_test`, `hash_out`=1 | | diagnostics (`pixels` stalls the GPU) |
+| `reset_every`, `pixels`, `dred`=1, `skip_exe`=1, `probe`, `stall_test`, `hash_out`=1 | | diagnostics (`pixels` stalls the GPU) | *(diagnostic keys — no functional default; no change is required)
 
 `drain` was removed in v1.4.0.
 
