@@ -15,7 +15,7 @@
 
 ### Home does nothing / no overlay / "RenoDX isn't installed"
 
-Nothing is loading ReShade. See [README](README.md#the-single-most-common-failure).
+Nothing is loading ReShade. See [README](README.md#what-you-need).
 
 Check in order:
 1. Is there a proxy DLL named after something the game imports? (`dxgi.dll` for D3D11/12)
